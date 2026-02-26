@@ -1,0 +1,53 @@
+{
+  "name": "opencode-luthier",
+  "version": "0.1.0",
+  "description": "oh-my-opencode gave you a Stratocaster. luthier lets you build your own.",
+  "author": "Tom (speson)",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "bun build src/index.ts --outdir dist --target bun --format esm",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check src/",
+    "lint:fix": "biome check --write src/",
+    "test": "bun test"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=1.2.0"
+  },
+  "dependencies": {
+    "zod": "^3.24.0",
+    "jsonc-parser": "^3.3.0"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.2.0",
+    "@opencode-ai/sdk": "^1.0.0",
+    "typescript": "^5.7.0",
+    "bun-types": "^1.2.0",
+    "@biomejs/biome": "^1.9.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "ai",
+    "agent",
+    "orchestration",
+    "customization"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/speson/luthier"
+  }
+}
