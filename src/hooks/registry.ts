@@ -3,10 +3,12 @@ import { createAgentOverridesHook, createAgentSystemHook } from "../agents/overr
 import type { LuthierConfig } from "../config/schema.js";
 import { createNotificationHook } from "../features/notify.js";
 import { createMcpConfigHook } from "../mcp/config-hook.js";
+import { createCircuitBreakerHook } from "../quality/circuit-breaker.js";
 import { log, logVerbose } from "../shared/log.js";
 import { createMetricsEventHook, createMetricsMessageHook, createMetricsToolHook } from "../state/metrics.js";
 import { createToastHook } from "../tui/toast.js";
 import { createChatMessageHook, createSystemTransformHook } from "./chat-message.js";
+import { createCodeSimplifierHook } from "./code-simplifier.js";
 import { createCompactionHook } from "./compaction.js";
 import { createContextMonitorHook } from "./context-monitor.js";
 import { createEventHook } from "./event-tracker.js";
@@ -15,6 +17,7 @@ import { createSessionRecoveryHook } from "./session-recovery.js";
 import { createShellEnvHook } from "./shell-env.js";
 import { createTodoContinuationHook } from "./todo-continuation.js";
 import { createToolAfterHook, createToolBeforeHook } from "./tool-interceptor.js";
+import { createValidationGateHook } from "./validation-gate.js";
 
 /**
  * Hook entry — a named hook with its target key in the Hooks interface
@@ -132,6 +135,21 @@ function getHookEntries(): HookEntry<keyof Hooks>[] {
 			name: "mcp-config",
 			key: "config",
 			create: (config) => createMcpConfigHook(config),
+		},
+		{
+			name: "circuit-breaker",
+			key: "tool.execute.after",
+			create: (config, ctx) => createCircuitBreakerHook(config, ctx),
+		},
+		{
+			name: "validation-gate",
+			key: "experimental.chat.system.transform",
+			create: (config) => createValidationGateHook(config),
+		},
+		{
+			name: "code-simplifier",
+			key: "tool.execute.after",
+			create: (config) => createCodeSimplifierHook(config),
 		},
 	];
 }
