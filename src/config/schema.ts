@@ -145,6 +145,50 @@ const SkillsConfigSchema = z.object({
 	extra_directories: z.array(z.string()).default([]),
 });
 
+// ─── MCP server schemas ───
+
+/**
+ * Bundled MCP server toggle — enable/disable pre-configured servers.
+ */
+const BundledMcpToggleSchema = z.object({
+	enabled: z.boolean().default(true),
+});
+
+/**
+ * Custom MCP server definition.
+ */
+const CustomMcpServerSchema = z.object({
+	/** Unique name for the server (used as key in OpenCode config). */
+	name: z.string(),
+	/** Server type: remote (HTTP) or local (subprocess). */
+	type: z.enum(["remote", "local"]),
+	/** URL for remote servers. */
+	url: z.string().optional(),
+	/** Command + args for local servers. */
+	command: z.array(z.string()).optional(),
+	/** Whether this server is enabled. */
+	enabled: z.boolean().default(true),
+	/** HTTP headers for remote servers. */
+	headers: z.record(z.string(), z.string()).optional(),
+	/** Environment variables for local servers. */
+	environment: z.record(z.string(), z.string()).optional(),
+});
+
+/**
+ * MCP server configuration.
+ */
+const McpConfigSchema = z.object({
+	/** Toggle bundled MCP servers on/off. */
+	bundled: z
+		.object({
+			context7: BundledMcpToggleSchema.default({}),
+			"grep-app": BundledMcpToggleSchema.default({}),
+		})
+		.default({}),
+	/** Custom MCP server definitions. */
+	custom: z.array(CustomMcpServerSchema).default([]),
+});
+
 /**
  * Root luthier configuration schema.
  *
@@ -170,6 +214,9 @@ export const LuthierConfigSchema = z.object({
 	/** Tool enable/disable configuration */
 	tools: ToolConfigSchema.default({}),
 
+	/** MCP server configuration (bundled + custom) */
+	mcp: McpConfigSchema.default({}),
+
 	/** Session lifecycle tracking */
 	session_tracking: SessionTrackingSchema.default({}),
 
@@ -188,5 +235,6 @@ export type CategoryConfig = z.infer<typeof CategorySchema>;
 export type SkillsConfig = z.infer<typeof SkillsConfigSchema>;
 export type AgentOverrideConfig = z.infer<typeof AgentOverrideSchema>;
 export type WebSearchConfig = z.infer<typeof WebSearchConfigSchema>;
+export type McpConfig = z.infer<typeof McpConfigSchema>;
 
 export const DEFAULT_CONFIG: LuthierConfig = LuthierConfigSchema.parse({});

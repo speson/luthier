@@ -1,6 +1,7 @@
 import type { Hooks, PluginInput } from "@opencode-ai/plugin";
 import { createAgentOverridesHook, createAgentSystemHook } from "../agents/overrides.js";
 import type { LuthierConfig } from "../config/schema.js";
+import { createMcpConfigHook } from "../mcp/config-hook.js";
 import { log, logVerbose } from "../shared/log.js";
 import { createChatMessageHook, createSystemTransformHook } from "./chat-message.js";
 import { createCompactionHook } from "./compaction.js";
@@ -80,6 +81,11 @@ function getHookEntries(): HookEntry<keyof Hooks>[] {
 			name: "compaction",
 			key: "experimental.session.compacting",
 			create: (config) => createCompactionHook(config),
+		},
+		{
+			name: "mcp-config",
+			key: "config",
+			create: (config) => createMcpConfigHook(config),
 		},
 	];
 }
