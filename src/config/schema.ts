@@ -98,6 +98,39 @@ const HooksConfigSchema = z.object({
 	compaction: CompactionConfigSchema.default({}),
 });
 
+// ─── Agent orchestration schemas ───
+
+/**
+ * Category definition — maps a task category to a model and description.
+ *
+ * oh-my-opencode defines categories like quick, deep, visual-engineering, ultrabrain.
+ * luthier lets users add custom categories and override defaults.
+ */
+const CategorySchema = z.object({
+	/** Model ID to use for this category (e.g. "claude-sonnet-4-20250514"). */
+	model: z.string().optional(),
+	/** Human-readable description of what this category is for. */
+	description: z.string().optional(),
+	/** Temperature override for this category. */
+	temperature: z.number().min(0).max(2).optional(),
+});
+
+/**
+ * Skills configuration — where to find skill files and which to disable.
+ *
+ * Skills are Markdown files with YAML frontmatter containing:
+ *   - name, description, trigger (keywords/phrases)
+ *   - The markdown body becomes the skill instruction prompt.
+ */
+const SkillsConfigSchema = z.object({
+	/** Directory to discover skill .md files (relative to project root). */
+	directory: z.string().default(".opencode/luthier/skills"),
+	/** Skill names to disable (won't be loaded even if files exist). */
+	disabled: z.array(z.string()).default([]),
+	/** Additional skill directories to search (for shared/global skills). */
+	extra_directories: z.array(z.string()).default([]),
+});
+
 /**
  * Root luthier configuration schema.
  *
@@ -113,6 +146,12 @@ export const LuthierConfigSchema = z.object({
 
 	/** Per-agent overrides (model, temperature, system prompt) */
 	agents: z.record(z.string(), AgentOverrideSchema).default({}),
+
+	/** Task category definitions (quick, deep, visual-engineering, etc.) */
+	categories: z.record(z.string(), CategorySchema).default({}),
+
+	/** Skill file loading configuration */
+	skills: SkillsConfigSchema.default({}),
 
 	/** Tool enable/disable configuration */
 	tools: ToolConfigSchema.default({}),
@@ -131,5 +170,8 @@ export type ChatMessageConfig = z.infer<typeof ChatMessageConfigSchema>;
 export type ToolInterceptorConfig = z.infer<typeof ToolInterceptorConfigSchema>;
 export type ShellEnvConfig = z.infer<typeof ShellEnvConfigSchema>;
 export type CompactionConfig = z.infer<typeof CompactionConfigSchema>;
+export type CategoryConfig = z.infer<typeof CategorySchema>;
+export type SkillsConfig = z.infer<typeof SkillsConfigSchema>;
+export type AgentOverrideConfig = z.infer<typeof AgentOverrideSchema>;
 
 export const DEFAULT_CONFIG: LuthierConfig = LuthierConfigSchema.parse({});
