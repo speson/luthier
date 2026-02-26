@@ -27,7 +27,9 @@ oh-my-opencode is a great orchestration layer. luthier inherits its DNA but adds
 
 ---
 
-## Phase 2: Hook Composition System
+## Phase 2: Hook Composition System ✅
+
+**Status**: Complete
 
 **Goal**: Users can enable/disable/customize any hook. Modular hook architecture like oh-my-opencode's `createHooks` pattern.
 
@@ -66,7 +68,7 @@ oh-my-opencode is a great orchestration layer. luthier inherits its DNA but adds
 
 ---
 
-## Phase 3: Agent Orchestration (Categories × Skills)
+## Phase 3: Agent Orchestration (Categories × Skills) ✅
 
 **Goal**: Port oh-my-opencode's dynamic agent composition. Users can define custom categories, skills, and agent overrides.
 
@@ -118,7 +120,7 @@ oh-my-opencode is a great orchestration layer. luthier inherits its DNA but adds
 
 ---
 
-## Phase 4: Custom Tool Registration
+## Phase 4: Custom Tool Registration ✅
 
 **Goal**: Users can register custom tools the AI agent can call. Built-in tools for common operations.
 
@@ -153,7 +155,7 @@ oh-my-opencode is a great orchestration layer. luthier inherits its DNA but adds
 
 ---
 
-## Phase 5: MCP Server Integration
+## Phase 5: MCP Server Integration ✅
 
 **Goal**: Bundled MCP servers with zero-config setup. Users can add/remove MCP servers via config.
 
@@ -191,7 +193,7 @@ oh-my-opencode is a great orchestration layer. luthier inherits its DNA but adds
 
 ---
 
-## Phase 6: Session & State Management
+## Phase 6: Session & State Management ✅
 
 **Goal**: Session persistence, recovery, and tracking beyond the basic event hook.
 
@@ -211,7 +213,7 @@ oh-my-opencode is a great orchestration layer. luthier inherits its DNA but adds
 
 ---
 
-## Phase 7: TUI & UX Customization
+## Phase 7: TUI & UX Customization ✅
 
 **Goal**: The "Custom Shop" differentiator — users can customize the visual/interactive experience.
 
@@ -252,7 +254,7 @@ oh-my-opencode is a great orchestration layer. luthier inherits its DNA but adds
 
 ---
 
-## Phase 8: Quality & Validation
+## Phase 8: Quality & Validation ✅
 
 **Goal**: Port oh-my-opencode's "Atlas Trusts No One" philosophy — verification and quality gates.
 
@@ -272,7 +274,7 @@ oh-my-opencode is a great orchestration layer. luthier inherits its DNA but adds
 
 ---
 
-## Phase 9: Documentation & Publishing
+## Phase 9: Documentation & Publishing ✅
 
 **Goal**: Polish for public release on npm.
 
@@ -298,21 +300,21 @@ oh-my-opencode is a great orchestration layer. luthier inherits its DNA but adds
 ```
 Phase 1 ✅ Scaffolding          [DONE]
   │
-  ├── Phase 2: Hook Composition  [NEXT — foundation for everything]
+  ├── Phase 2 ✅ Hook Composition  [DONE]
   │     │
-  │     ├── Phase 3: Agent Orchestration
+  │     ├── Phase 3 ✅ Agent Orchestration  [DONE]
   │     │     │
-  │     │     └── Phase 8: Quality & Validation
+  │     │     └── Phase 8 ✅ Quality & Validation  [DONE]
   │     │
-  │     ├── Phase 4: Custom Tools
+  │     ├── Phase 4 ✅ Custom Tools  [DONE]
   │     │
-  │     └── Phase 6: Session & State
+  │     └── Phase 6 ✅ Session & State  [DONE]
   │           │
-  │           └── Phase 7: TUI & UX
+  │           └── Phase 7 ✅ TUI & UX  [DONE]
   │
-  ├── Phase 5: MCP Integration   [independent]
+  ├── Phase 5 ✅ MCP Integration  [DONE]
   │
-  └── Phase 9: Documentation     [final polish]
+  └── Phase 9 ✅ Documentation    [DONE]
 ```
 
 ### Recommended Sprint Plan
@@ -328,7 +330,7 @@ Phase 1 ✅ Scaffolding          [DONE]
 | Sprint 7 | Phase 8 | 2-3 days | Validation gates, quality scoring |
 | Sprint 8 | Phase 9 | 1-2 days | npm publish, CI/CD, docs |
 
-**Total estimated: ~2-3 weeks for full feature parity + customization layer**
+**All 9 phases complete. v0.1.0 ready for npm publish.**
 
 ---
 
