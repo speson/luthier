@@ -189,6 +189,64 @@ const McpConfigSchema = z.object({
 	custom: z.array(CustomMcpServerSchema).default([]),
 });
 
+// ─── TUI & Notification schemas ───
+
+/**
+ * Toast notification configuration.
+ */
+const ToastConfigSchema = z.object({
+	enabled: z.boolean().default(true),
+	/** Toast display duration in milliseconds. */
+	duration: z.number().min(0).default(3000),
+});
+
+/**
+ * Theme configuration — customize visual output.
+ */
+const ThemeConfigSchema = z.object({
+	/** Log message prefix. */
+	prefix: z.string().default("[luthier]"),
+	/** Color assignments for log levels. */
+	colors: z
+		.object({
+			success: z.string().default("green"),
+			warning: z.string().default("yellow"),
+			error: z.string().default("red"),
+			info: z.string().default("blue"),
+		})
+		.default({}),
+});
+
+/**
+ * TUI configuration.
+ */
+const TuiConfigSchema = z.object({
+	toast: ToastConfigSchema.default({}),
+	theme: ThemeConfigSchema.default({}),
+});
+
+/**
+ * Notification channel definition.
+ */
+const NotificationChannelSchema = z.object({
+	/** Channel type: discord, slack, or generic webhook. */
+	type: z.enum(["discord", "slack", "webhook"]),
+	/** Webhook URL or env var reference (prefixed with $). */
+	webhook: z.string(),
+});
+
+/**
+ * Notification configuration.
+ */
+const NotificationsConfigSchema = z.object({
+	/** Whether to send notifications on session completion. */
+	on_complete: z.boolean().default(false),
+	/** Whether to send notifications on session error. */
+	on_error: z.boolean().default(false),
+	/** Notification delivery channels. */
+	channels: z.array(NotificationChannelSchema).default([]),
+});
+
 /**
  * Root luthier configuration schema.
  *
@@ -217,6 +275,12 @@ export const LuthierConfigSchema = z.object({
 	/** MCP server configuration (bundled + custom) */
 	mcp: McpConfigSchema.default({}),
 
+	/** TUI customization (toasts, theme) */
+	tui: TuiConfigSchema.default({}),
+
+	/** External notification configuration */
+	notifications: NotificationsConfigSchema.default({}),
+
 	/** Session lifecycle tracking */
 	session_tracking: SessionTrackingSchema.default({}),
 
@@ -236,5 +300,8 @@ export type SkillsConfig = z.infer<typeof SkillsConfigSchema>;
 export type AgentOverrideConfig = z.infer<typeof AgentOverrideSchema>;
 export type WebSearchConfig = z.infer<typeof WebSearchConfigSchema>;
 export type McpConfig = z.infer<typeof McpConfigSchema>;
+export type TuiConfig = z.infer<typeof TuiConfigSchema>;
+export type NotificationsConfig = z.infer<typeof NotificationsConfigSchema>;
+export type NotificationChannel = z.infer<typeof NotificationChannelSchema>;
 
 export const DEFAULT_CONFIG: LuthierConfig = LuthierConfigSchema.parse({});

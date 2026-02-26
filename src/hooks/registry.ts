@@ -1,9 +1,11 @@
 import type { Hooks, PluginInput } from "@opencode-ai/plugin";
 import { createAgentOverridesHook, createAgentSystemHook } from "../agents/overrides.js";
 import type { LuthierConfig } from "../config/schema.js";
+import { createNotificationHook } from "../features/notify.js";
 import { createMcpConfigHook } from "../mcp/config-hook.js";
 import { log, logVerbose } from "../shared/log.js";
 import { createMetricsEventHook, createMetricsMessageHook, createMetricsToolHook } from "../state/metrics.js";
+import { createToastHook } from "../tui/toast.js";
 import { createChatMessageHook, createSystemTransformHook } from "./chat-message.js";
 import { createCompactionHook } from "./compaction.js";
 import { createContextMonitorHook } from "./context-monitor.js";
@@ -115,6 +117,16 @@ function getHookEntries(): HookEntry<keyof Hooks>[] {
 			name: "session-recovery",
 			key: "experimental.chat.system.transform",
 			create: (config, ctx) => createSessionRecoveryHook(config, ctx),
+		},
+		{
+			name: "toast",
+			key: "event",
+			create: (config, ctx) => createToastHook(config, ctx),
+		},
+		{
+			name: "notifications",
+			key: "event",
+			create: (config, ctx) => createNotificationHook(config, ctx),
 		},
 		{
 			name: "mcp-config",
