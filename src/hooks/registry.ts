@@ -3,11 +3,15 @@ import { createAgentOverridesHook, createAgentSystemHook } from "../agents/overr
 import type { LuthierConfig } from "../config/schema.js";
 import { createMcpConfigHook } from "../mcp/config-hook.js";
 import { log, logVerbose } from "../shared/log.js";
+import { createMetricsEventHook, createMetricsMessageHook, createMetricsToolHook } from "../state/metrics.js";
 import { createChatMessageHook, createSystemTransformHook } from "./chat-message.js";
 import { createCompactionHook } from "./compaction.js";
+import { createContextMonitorHook } from "./context-monitor.js";
 import { createEventHook } from "./event-tracker.js";
 import { createPermissionHook } from "./permission-handler.js";
+import { createSessionRecoveryHook } from "./session-recovery.js";
 import { createShellEnvHook } from "./shell-env.js";
+import { createTodoContinuationHook } from "./todo-continuation.js";
 import { createToolAfterHook, createToolBeforeHook } from "./tool-interceptor.js";
 
 /**
@@ -81,6 +85,36 @@ function getHookEntries(): HookEntry<keyof Hooks>[] {
 			name: "compaction",
 			key: "experimental.session.compacting",
 			create: (config) => createCompactionHook(config),
+		},
+		{
+			name: "metrics-event",
+			key: "event",
+			create: (config, ctx) => createMetricsEventHook(config, ctx),
+		},
+		{
+			name: "metrics-tool",
+			key: "tool.execute.after",
+			create: (config, ctx) => createMetricsToolHook(config, ctx),
+		},
+		{
+			name: "metrics-message",
+			key: "chat.message",
+			create: (config, ctx) => createMetricsMessageHook(config, ctx),
+		},
+		{
+			name: "todo-continuation",
+			key: "event",
+			create: (config, ctx) => createTodoContinuationHook(config, ctx),
+		},
+		{
+			name: "context-monitor",
+			key: "chat.message",
+			create: (config) => createContextMonitorHook(config),
+		},
+		{
+			name: "session-recovery",
+			key: "experimental.chat.system.transform",
+			create: (config, ctx) => createSessionRecoveryHook(config, ctx),
 		},
 		{
 			name: "mcp-config",
