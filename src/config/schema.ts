@@ -12,11 +12,25 @@ const AgentOverrideSchema = z.object({
 });
 
 /**
- * Tool configuration schema — whitelist/blacklist tools.
+ * Web search provider configuration.
+ */
+const WebSearchConfigSchema = z.object({
+	/** Search provider: "exa" or "tavily". */
+	provider: z.enum(["exa", "tavily"]).default("exa"),
+	/** Env var name that holds the API key (NOT the key itself). */
+	api_key_env: z.string().default("EXA_API_KEY"),
+	/** Max results to return. */
+	max_results: z.number().min(1).max(20).default(5),
+});
+
+/**
+ * Tool configuration schema — whitelist/blacklist tools + per-tool settings.
  */
 const ToolConfigSchema = z.object({
 	enabled: z.array(z.string()).optional(),
 	disabled: z.array(z.string()).optional(),
+	/** Web search tool configuration. */
+	web_search: WebSearchConfigSchema.default({}),
 });
 
 /**
@@ -173,5 +187,6 @@ export type CompactionConfig = z.infer<typeof CompactionConfigSchema>;
 export type CategoryConfig = z.infer<typeof CategorySchema>;
 export type SkillsConfig = z.infer<typeof SkillsConfigSchema>;
 export type AgentOverrideConfig = z.infer<typeof AgentOverrideSchema>;
+export type WebSearchConfig = z.infer<typeof WebSearchConfigSchema>;
 
 export const DEFAULT_CONFIG: LuthierConfig = LuthierConfigSchema.parse({});

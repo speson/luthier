@@ -2,6 +2,7 @@ import type { Plugin } from "@opencode-ai/plugin";
 import { loadLuthierConfig } from "./config/loader.js";
 import { buildHooks } from "./hooks/registry.js";
 import { log } from "./shared/log.js";
+import { buildTools } from "./tools/registry.js";
 
 /**
  * luthier — OpenCode Plugin
@@ -16,7 +17,13 @@ const LuthierPlugin: Plugin = async (ctx) => {
 
 	log("luthier v0.1.0 loaded");
 
-	return buildHooks(config, ctx);
+	const hooks = buildHooks(config, ctx);
+	const tools = buildTools(config, ctx);
+
+	return {
+		...hooks,
+		...(tools ? { tool: tools } : {}),
+	};
 };
 
 export default LuthierPlugin;
