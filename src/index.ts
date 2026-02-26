@@ -1,6 +1,6 @@
 import type { Plugin } from "@opencode-ai/plugin";
 import { loadLuthierConfig } from "./config/loader.js";
-import { createEventHook } from "./hooks/event-tracker.js";
+import { buildHooks } from "./hooks/registry.js";
 import { log } from "./shared/log.js";
 
 /**
@@ -16,11 +16,7 @@ const LuthierPlugin: Plugin = async (ctx) => {
 
 	log("luthier v0.1.0 loaded");
 
-	const eventHook = createEventHook(config);
-
-	return {
-		event: eventHook,
-	};
+	return buildHooks(config, ctx);
 };
 
 export default LuthierPlugin;
