@@ -43,7 +43,7 @@ export function createDelegationModule(): PromptModule {
 
 			// Delegation protocol
 			fragments.push(
-				`## Delegation Protocol\n- Use 6-section prompt structure: TASK, EXPECTED OUTCOME, REQUIRED TOOLS, MUST DO, MUST NOT DO, CONTEXT\n- Run independent agents in parallel (multiple task() calls in one message)\n- For failures: resume with session_id — never start fresh (preserves context, saves tokens)\n- Background agents: explore/librarian only. Task execution: always foreground`,
+				"## Delegation Protocol\n- Use 6-section prompt structure: TASK, EXPECTED OUTCOME, REQUIRED TOOLS, MUST DO, MUST NOT DO, CONTEXT\n- Run independent agents in parallel (multiple task() calls in one message)\n- For failures: resume with session_id \u2014 never start fresh (preserves context, saves tokens)\n- Background agents: explore/librarian only. Task execution: always foreground",
 			);
 
 			return fragments;
