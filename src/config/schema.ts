@@ -247,12 +247,163 @@ const NotificationsConfigSchema = z.object({
 	channels: z.array(NotificationChannelSchema).default([]),
 });
 
+// ─── Module configuration schemas ───
+
+/**
+ * Orchestration module configuration.
+ */
+const OrchestrationModuleSchema = z.object({
+	enabled: z.boolean().default(true),
+	intent_gate: z.boolean().default(true),
+	codebase_assessment: z.boolean().default(true),
+	execution: z.boolean().default(true),
+	completion: z.boolean().default(true),
+});
+
+/**
+ * Delegation module configuration.
+ */
+const DelegationModuleSchema = z.object({
+	enabled: z.boolean().default(true),
+	agents: z
+		.object({
+			explore: z.boolean().default(true),
+			librarian: z.boolean().default(true),
+			oracle: z.boolean().default(true),
+			metis: z.boolean().default(true),
+			momus: z.boolean().default(true),
+		})
+		.default({}),
+});
+
+/**
+ * Quality module configuration.
+ */
+const QualityModuleSchema = z.object({
+	enabled: z.boolean().default(true),
+	type_safety: z.boolean().default(true),
+	empty_catch: z.boolean().default(true),
+	test_integrity: z.boolean().default(true),
+});
+
+/**
+ * Workflow module configuration.
+ */
+const WorkflowModuleSchema = z.object({
+	enabled: z.boolean().default(true),
+	todo_management: z.boolean().default(true),
+	todo_continuation: z.boolean().default(true),
+	verification: z.boolean().default(true),
+	evidence_required: z.boolean().default(true),
+});
+
+/**
+ * Failure recovery module configuration.
+ */
+const FailureRecoveryModuleSchema = z.object({
+	enabled: z.boolean().default(true),
+});
+
+/**
+ * Built-in skills configuration.
+ */
+const BuiltinSkillsSchema = z.object({
+	playwright: z.boolean().default(true),
+	"git-master": z.boolean().default(true),
+	"frontend-ui-ux": z.boolean().default(true),
+	"dev-browser": z.boolean().default(true),
+});
+
+/**
+ * Skills module configuration.
+ */
+const SkillsModuleSchema = z.object({
+	enabled: z.boolean().default(true),
+	builtin: BuiltinSkillsSchema.default({}),
+});
+
+/**
+ * Modules configuration — feature toggles for luthier behavior modules.
+ */
+const ModulesConfigSchema = z.object({
+	orchestration: OrchestrationModuleSchema.default({}),
+	delegation: DelegationModuleSchema.default({}),
+	quality: QualityModuleSchema.default({}),
+	workflow: WorkflowModuleSchema.default({}),
+	failure_recovery: FailureRecoveryModuleSchema.default({}),
+	skills: SkillsModuleSchema.default({}),
+});
+
+// ─── UX configuration schemas ───
+
+/**
+ * Persona configuration.
+ */
+const PersonaConfigSchema = z.object({
+	name: z.string().optional(),
+	role: z.string().optional(),
+	traits: z.array(z.string()).default([]),
+});
+
+/**
+ * Communication configuration.
+ */
+const CommunicationConfigSchema = z.object({
+	language: z.string().optional(),
+	tone: z.enum(["professional", "casual", "academic", "terse"]).optional(),
+	verbosity: z.enum(["concise", "balanced", "detailed"]).optional(),
+});
+
+/**
+ * UX agent configuration.
+ */
+const UxAgentConfigSchema = z.object({
+	color: z.string().optional(),
+});
+
+/**
+ * Custom command configuration.
+ */
+const CustomCommandSchema = z.object({
+	name: z.string(),
+	description: z.string().optional(),
+	command: z.string(),
+});
+
+/**
+ * UX configuration — persona, communication style, visual settings.
+ */
+const UxConfigSchema = z.object({
+	preset: z.enum(["default", "minimal", "verbose", "pair-buddy"]).default("default"),
+	persona: PersonaConfigSchema.default({}),
+	communication: CommunicationConfigSchema.default({}),
+	theme: z.string().optional(),
+	agents: z.record(z.string(), UxAgentConfigSchema).default({}),
+	username: z.string().optional(),
+	keybinds: z.record(z.string(), z.string()).default({}),
+	tui: z
+		.object({
+			scroll_speed: z.number().optional(),
+			scroll_acceleration: z.number().optional(),
+			diff_style: z.string().optional(),
+		})
+		.default({}),
+	toast: z
+		.object({
+			enabled: z.boolean().optional(),
+			duration: z.number().optional(),
+		})
+		.default({}),
+	commands: z.array(CustomCommandSchema).default([]),
+});
+
 /**
  * Root luthier configuration schema.
  *
  * The Custom Shop philosophy: everything the user might want to tweak
  * is exposed here. Sensible defaults mean zero config is also valid.
  */
+
 export const LuthierConfigSchema = z.object({
 	/** Hooks to disable by name */
 	disabled_hooks: z.array(z.string()).default([]),
@@ -284,6 +435,12 @@ export const LuthierConfigSchema = z.object({
 	/** Session lifecycle tracking */
 	session_tracking: SessionTrackingSchema.default({}),
 
+	/** Feature module toggles — enable/disable luthier behavior modules */
+	modules: ModulesConfigSchema.default({}),
+
+	/** UX customization — persona, communication style, visual settings */
+	ux: UxConfigSchema.default({}),
+
 	/** Experimental features — opt-in only */
 	experimental: z.record(z.string(), z.unknown()).default({}),
 });
@@ -303,5 +460,11 @@ export type McpConfig = z.infer<typeof McpConfigSchema>;
 export type TuiConfig = z.infer<typeof TuiConfigSchema>;
 export type NotificationsConfig = z.infer<typeof NotificationsConfigSchema>;
 export type NotificationChannel = z.infer<typeof NotificationChannelSchema>;
+export type ModulesConfig = z.infer<typeof ModulesConfigSchema>;
+export type UxConfig = z.infer<typeof UxConfigSchema>;
+export type PersonaConfig = z.infer<typeof PersonaConfigSchema>;
+export type CommunicationConfig = z.infer<typeof CommunicationConfigSchema>;
+export type UxAgentConfig = z.infer<typeof UxAgentConfigSchema>;
+export type CustomCommand = z.infer<typeof CustomCommandSchema>;
 
 export const DEFAULT_CONFIG: LuthierConfig = LuthierConfigSchema.parse({});
