@@ -17,17 +17,8 @@ import { BUNDLED_MCP_SERVERS } from "./bundled.js";
 export function createMcpConfigHook(config: LuthierConfig): Hooks["config"] {
 	const mcpConfig = config.mcp;
 
-	// Resolve which bundled servers to inject
 	const bundledToInject: Array<{ key: string; name: string; serverConfig: Record<string, unknown> }> = [];
-
 	for (const [key, server] of Object.entries(BUNDLED_MCP_SERVERS)) {
-		// Check if user has explicitly disabled this bundled server
-		const userSetting = mcpConfig.bundled[key as keyof typeof mcpConfig.bundled];
-		if (userSetting !== undefined && !userSetting.enabled) {
-			logVerbose(`Bundled MCP server disabled: ${server.name}`);
-			continue;
-		}
-
 		bundledToInject.push({
 			key,
 			name: server.name,

@@ -29,21 +29,4 @@ export interface BundledMcpServer {
  *
  * The key is the server name used in OpenCode's `mcp` config map.
  */
-export const BUNDLED_MCP_SERVERS: Record<string, BundledMcpServer> = {
-	context7: {
-		name: "Context7",
-		config: {
-			type: "remote",
-			url: "https://mcp.context7.com/mcp",
-			enabled: true,
-		},
-	},
-	"grep-app": {
-		name: "grep.app",
-		config: {
-			type: "remote",
-			url: "https://grep.app/api/mcp",
-			enabled: true,
-		},
-	},
-};
+export const BUNDLED_MCP_SERVERS: Record<string, BundledMcpServer> = {};

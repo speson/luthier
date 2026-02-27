@@ -22,7 +22,6 @@ describe("loadSkills", () => {
 		writeFileSync(join(dir, filename), content);
 	}
 
-
 	/** Disable all bundled skills so file-loading tests check exact counts. */
 	const NO_BUILTINS = {
 		modules: {

@@ -179,12 +179,7 @@ const CustomMcpServerSchema = z.object({
  */
 const McpConfigSchema = z.object({
 	/** Toggle bundled MCP servers on/off. */
-	bundled: z
-		.object({
-			context7: BundledMcpToggleSchema.default({}),
-			"grep-app": BundledMcpToggleSchema.default({}),
-		})
-		.default({}),
+	bundled: z.object({}).default({}),
 	/** Custom MCP server definitions. */
 	custom: z.array(CustomMcpServerSchema).default([]),
 });
