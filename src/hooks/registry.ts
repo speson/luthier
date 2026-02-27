@@ -3,10 +3,12 @@ import { createAgentOverridesHook, createAgentSystemHook } from "../agents/overr
 import type { LuthierConfig } from "../config/schema.js";
 import { createNotificationHook } from "../features/notify.js";
 import { createMcpConfigHook } from "../mcp/config-hook.js";
+import { createPromptAssemblerHook } from "../modules/assembler.js";
 import { createCircuitBreakerHook } from "../quality/circuit-breaker.js";
 import { log, logVerbose } from "../shared/log.js";
 import { createMetricsEventHook, createMetricsMessageHook, createMetricsToolHook } from "../state/metrics.js";
 import { createToastHook } from "../tui/toast.js";
+import { createUxConfigHook } from "../ux/visual.js";
 import { createChatMessageHook, createSystemTransformHook } from "./chat-message.js";
 import { createCodeSimplifierHook } from "./code-simplifier.js";
 import { createCompactionHook } from "./compaction.js";
@@ -150,6 +152,16 @@ function getHookEntries(): HookEntry<keyof Hooks>[] {
 			name: "code-simplifier",
 			key: "tool.execute.after",
 			create: (config) => createCodeSimplifierHook(config),
+		},
+		{
+			name: "prompt-assembler",
+			key: "experimental.chat.system.transform",
+			create: (config, ctx) => createPromptAssemblerHook(config, ctx),
+		},
+		{
+			name: "ux-config",
+			key: "config",
+			create: (config) => createUxConfigHook(config),
 		},
 	];
 }

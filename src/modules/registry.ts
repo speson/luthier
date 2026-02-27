@@ -1,5 +1,10 @@
 import type { LuthierConfig } from "../config/schema.js";
+import { createDelegationModule } from "./delegation.js";
+import { createFailureRecoveryModule } from "./failure-recovery.js";
+import { createOrchestrationModule } from "./orchestration.js";
+import { createQualityRulesModule } from "./quality-rules.js";
 import type { PromptModule } from "./types.js";
+import { createWorkflowModule } from "./workflow.js";
 
 /**
  * All prompt module descriptors, mapping config keys to module names.
@@ -13,42 +18,27 @@ const MODULE_ENTRIES: Array<{
 	{
 		name: "orchestration",
 		isEnabled: (config) => config.modules.orchestration.enabled,
-		createModule: () => ({
-			name: "orchestration",
-			getPromptFragments: () => [],
-		}),
+		createModule: () => createOrchestrationModule(),
 	},
 	{
 		name: "delegation",
 		isEnabled: (config) => config.modules.delegation.enabled,
-		createModule: () => ({
-			name: "delegation",
-			getPromptFragments: () => [],
-		}),
+		createModule: () => createDelegationModule(),
 	},
 	{
 		name: "quality-rules",
 		isEnabled: (config) => config.modules.quality.enabled,
-		createModule: () => ({
-			name: "quality-rules",
-			getPromptFragments: () => [],
-		}),
+		createModule: () => createQualityRulesModule(),
 	},
 	{
 		name: "workflow",
 		isEnabled: (config) => config.modules.workflow.enabled,
-		createModule: () => ({
-			name: "workflow",
-			getPromptFragments: () => [],
-		}),
+		createModule: () => createWorkflowModule(),
 	},
 	{
 		name: "failure-recovery",
 		isEnabled: (config) => config.modules.failure_recovery.enabled,
-		createModule: () => ({
-			name: "failure-recovery",
-			getPromptFragments: () => [],
-		}),
+		createModule: () => createFailureRecoveryModule(),
 	},
 ];
 
