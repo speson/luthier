@@ -1,4 +1,6 @@
 import type { LuthierConfig } from "../config/schema.js";
+import type { CustomModule } from "./custom-loader.js";
+import { toPromptModule } from "./custom-loader.js";
 import { createDelegationModule } from "./delegation.js";
 import { createFailureRecoveryModule } from "./failure-recovery.js";
 import { createOrchestrationModule } from "./orchestration.js";
@@ -7,10 +9,9 @@ import type { PromptModule } from "./types.js";
 import { createWorkflowModule } from "./workflow.js";
 
 /**
- * All prompt module descriptors, mapping config keys to module names.
- * Actual implementations are lazy-loaded and will be registered here in Wave 3.
+ * All built-in prompt module descriptors, mapping config keys to module names.
  */
-const MODULE_ENTRIES: Array<{
+const BUILTIN_MODULE_ENTRIES: Array<{
 	name: string;
 	isEnabled: (config: LuthierConfig) => boolean;
 	createModule: () => PromptModule;
@@ -43,10 +44,19 @@ const MODULE_ENTRIES: Array<{
 ];
 
 /**
- * Returns all prompt modules that are enabled in the current config.
+ * Returns all enabled built-in prompt modules.
  * Modules are returned in canonical order: orchestration → delegation → quality-rules → workflow → failure-recovery.
- * This order matches the assembler's injection sequence.
  */
 export function getEnabledModules(config: LuthierConfig): PromptModule[] {
-	return MODULE_ENTRIES.filter((entry) => entry.isEnabled(config)).map((entry) => entry.createModule());
+	return BUILTIN_MODULE_ENTRIES.filter((entry) => entry.isEnabled(config)).map((entry) => entry.createModule());
+}
+
+/**
+ * Returns all enabled modules — built-in first (canonical order), then custom (sorted by priority).
+ * Custom modules are appended after built-in modules.
+ */
+export function getAllEnabledModules(config: LuthierConfig, customModules: CustomModule[]): PromptModule[] {
+	const builtins = getEnabledModules(config);
+	const customs = customModules.map((mod) => toPromptModule(mod));
+	return [...builtins, ...customs];
 }

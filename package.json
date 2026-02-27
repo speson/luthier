@@ -14,7 +14,7 @@
     }
   },
   "scripts": {
-    "build": "bun build src/index.ts --outdir dist --target bun --format esm",
+    "build": "bun build src/index.ts --outdir dist --target bun --format esm && tsc --emitDeclarationOnly --declaration --outDir dist",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "lint": "biome check src/",

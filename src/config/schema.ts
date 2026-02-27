@@ -318,6 +318,20 @@ const SkillsModuleSchema = z.object({
 });
 
 /**
+ * Custom prompt module configuration.
+ * Users can create .md files with YAML frontmatter in a configurable directory.
+ * Each file becomes a PromptModule injected into the system prompt.
+ */
+const CustomModulesSchema = z.object({
+	/** Directory to discover custom module .md files (relative to project root). */
+	directory: z.string().default(".opencode/luthier/modules"),
+	/** Additional directories to search (absolute or relative). */
+	extra_directories: z.array(z.string()).default([]),
+	/** Module names to disable (won't be loaded even if files exist). */
+	disabled: z.array(z.string()).default([]),
+});
+
+/**
  * Modules configuration — feature toggles for luthier behavior modules.
  */
 const ModulesConfigSchema = z.object({
@@ -327,6 +341,10 @@ const ModulesConfigSchema = z.object({
 	workflow: WorkflowModuleSchema.default({}),
 	failure_recovery: FailureRecoveryModuleSchema.default({}),
 	skills: SkillsModuleSchema.default({}),
+	/** Custom prompt modules loaded from .md files. */
+	custom: CustomModulesSchema.default({}),
+	/** Whether to apply template rendering to all prompt fragments. */
+	templates_enabled: z.boolean().default(true),
 });
 
 // ─── UX configuration schemas ───
@@ -461,5 +479,6 @@ export type PersonaConfig = z.infer<typeof PersonaConfigSchema>;
 export type CommunicationConfig = z.infer<typeof CommunicationConfigSchema>;
 export type UxAgentConfig = z.infer<typeof UxAgentConfigSchema>;
 export type CustomCommand = z.infer<typeof CustomCommandSchema>;
+export type CustomModulesConfig = z.infer<typeof CustomModulesSchema>;
 
 export const DEFAULT_CONFIG: LuthierConfig = LuthierConfigSchema.parse({});
