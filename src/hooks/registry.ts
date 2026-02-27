@@ -14,13 +14,14 @@ import { createCodeSimplifierHook } from "./code-simplifier.js";
 import { createCompactionHook } from "./compaction.js";
 import { createContextMonitorHook } from "./context-monitor.js";
 import { createEventHook } from "./event-tracker.js";
+import { createLuthierCommandBeforeHook, createLuthierCommandConfigHook } from "./luthier-command.js";
+import { createLuthierPaletteBeforeHook, createLuthierPaletteConfigHook } from "./luthier-palette.js";
 import { createPermissionHook } from "./permission-handler.js";
 import { createSessionRecoveryHook } from "./session-recovery.js";
 import { createShellEnvHook } from "./shell-env.js";
 import { createTodoContinuationHook } from "./todo-continuation.js";
 import { createToolAfterHook, createToolBeforeHook } from "./tool-interceptor.js";
 import { createValidationGateHook } from "./validation-gate.js";
-import { createLuthierCommandBeforeHook, createLuthierCommandConfigHook } from "./luthier-command.js";
 
 /**
  * Hook entry — a named hook with its target key in the Hooks interface
@@ -173,6 +174,16 @@ function getHookEntries(): HookEntry<keyof Hooks>[] {
 			name: "luthier-command-intercept",
 			key: "command.execute.before",
 			create: (config) => createLuthierCommandBeforeHook(config),
+		},
+		{
+			name: "luthier-palette",
+			key: "config",
+			create: (config) => createLuthierPaletteConfigHook(config),
+		},
+		{
+			name: "luthier-palette-intercept",
+			key: "command.execute.before",
+			create: (config) => createLuthierPaletteBeforeHook(config),
 		},
 	];
 }

@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-02-27
+
+### Added
+
+- Luthier command palette: 11 commands registered via `config` hook with `luthier.*` dot-notation naming for TUI category grouping
+- Palette commands: `luthier.preset`, `luthier.persona`, `luthier.language`, `luthier.tone`, `luthier.verbosity`, `luthier.toast`, `luthier.context`, `luthier.quality`, `luthier.workflow`, `luthier.config`, `luthier.status`
+- `command.execute.before` hook injects per-command guide prompts with available options, config keys, and step-by-step instructions
+- All palette commands are disableable via `disabled_hooks: ["luthier-palette"]`
+
 ## [0.3.0] - 2026-02-27
 
 ### Added
@@ -42,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TUI customization with toast notifications, theme system, and external notifications (Discord, Slack, webhook)
 - Quality validation with circuit breaker, validation gate, code simplifier for AI slop detection, and failure playbook
 
+[0.4.0]: https://github.com/speson/luthier/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/speson/luthier/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/speson/luthier/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/speson/luthier/releases/tag/v0.1.0

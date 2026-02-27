@@ -15,7 +15,7 @@ import { buildTools } from "./tools/registry.js";
 const LuthierPlugin: Plugin = async (ctx) => {
 	const config = loadLuthierConfig(ctx.directory);
 
-	log("luthier v0.3.0 loaded");
+	log("luthier v0.4.0 loaded");
 
 	const hooks = buildHooks(config, ctx);
 	const tools = buildTools(config, ctx);
