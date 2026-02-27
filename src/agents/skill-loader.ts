@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { basename, extname, join } from "node:path";
 import type { LuthierConfig } from "../config/schema.js";
 import { log, logVerbose } from "../shared/log.js";
+import { BUNDLED_SKILLS } from "./bundled-skills.js";
 
 /**
  * A loaded skill definition parsed from a Markdown file.
@@ -131,16 +132,38 @@ function discoverMarkdownFiles(dir: string): string[] {
 /**
  * Load all skills from configured directories, respecting disabled list.
  *
- * Search order:
+ * Loading order (later layers override earlier):
+ *   0. Bundled skills (filtered by config.modules.skills.builtin.*)
  *   1. Primary directory: `skills.directory` (relative to project root)
  *   2. Extra directories: `skills.extra_directories` (absolute or relative)
  *
  * Skills with duplicate names: later directories override earlier ones.
+ * User .md skill files with the same name override bundled skills.
  */
 export function loadSkills(config: LuthierConfig, projectDirectory: string): Map<string, Skill> {
 	const skillsConfig = config.skills;
+	const modulesConfig = config.modules.skills;
 	const disabledSet = new Set(skillsConfig.disabled);
 	const skills = new Map<string, Skill>();
+
+	// ─── Layer 0: Load bundled skills as base (user files will override) ───
+	const builtinToggles = modulesConfig.builtin;
+	for (const [name, bundled] of Object.entries(BUNDLED_SKILLS)) {
+		// Check if this specific built-in skill is disabled
+		const isEnabled = builtinToggles[name as keyof typeof builtinToggles] ?? true;
+		if (!isEnabled) {
+			logVerbose(`Built-in skill disabled: ${name}`);
+			continue;
+		}
+		if (disabledSet.has(name)) {
+			logVerbose(`Skill disabled: ${name} (built-in)`);
+			continue;
+		}
+		skills.set(name, { ...bundled, sourcePath: "<bundled>" });
+		logVerbose(`Built-in skill loaded: ${name}`);
+	}
+
+	// ─── Layer 1+: User .md files override bundled skills ───
 
 	// Collect all directories to search
 	const dirs: string[] = [
@@ -172,8 +195,9 @@ export function loadSkills(config: LuthierConfig, projectDirectory: string): Map
 		}
 	}
 
-	if (totalFiles > 0) {
-		log(`Skills: ${skills.size} loaded, ${disabledSet.size} disabled`);
+	const builtinCount = [...skills.values()].filter((s) => s.sourcePath === "<bundled>").length;
+	if (totalFiles > 0 || builtinCount > 0) {
+		log(`Skills: ${skills.size} loaded (${builtinCount} built-in), ${disabledSet.size} disabled`);
 	} else {
 		logVerbose("No skill files found");
 	}
