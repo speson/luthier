@@ -57,7 +57,7 @@ describe("buildTools", () => {
 
 	it("returns undefined when all tools are disabled", () => {
 		const config = LuthierConfigSchema.parse({
-			tools: { disabled: ["web-search", "session-info"] },
+			tools: { disabled: ["web-search", "session-info", "luthier-config"] },
 		});
 		const tools = buildTools(config, mockCtx);
 		expect(tools).toBeUndefined();

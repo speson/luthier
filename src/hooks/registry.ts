@@ -20,6 +20,7 @@ import { createShellEnvHook } from "./shell-env.js";
 import { createTodoContinuationHook } from "./todo-continuation.js";
 import { createToolAfterHook, createToolBeforeHook } from "./tool-interceptor.js";
 import { createValidationGateHook } from "./validation-gate.js";
+import { createLuthierCommandBeforeHook, createLuthierCommandConfigHook } from "./luthier-command.js";
 
 /**
  * Hook entry — a named hook with its target key in the Hooks interface
@@ -162,6 +163,16 @@ function getHookEntries(): HookEntry<keyof Hooks>[] {
 			name: "ux-config",
 			key: "config",
 			create: (config) => createUxConfigHook(config),
+		},
+		{
+			name: "luthier-command",
+			key: "config",
+			create: (config) => createLuthierCommandConfigHook(config),
+		},
+		{
+			name: "luthier-command-intercept",
+			key: "command.execute.before",
+			create: (config) => createLuthierCommandBeforeHook(config),
 		},
 	];
 }

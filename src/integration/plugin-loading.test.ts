@@ -70,6 +70,8 @@ describe("Plugin Loading E2E", () => {
 				"code-simplifier",
 				"prompt-assembler",
 				"ux-config",
+				"luthier-command",
+				"luthier-command-intercept",
 			],
 		});
 		const hooks = buildHooks(config, mockCtx);

@@ -3,6 +3,7 @@ import type { LuthierConfig } from "../config/schema.js";
 import { log, logVerbose } from "../shared/log.js";
 import { createSessionTool } from "./session.js";
 import { createWebSearchTool } from "./web-search.js";
+import { createLuthierConfigTool } from "./luthier-config.js";
 
 /**
  * A named tool entry for the registry.
@@ -27,6 +28,10 @@ function getBuiltinTools(): ToolEntry[] {
 		{
 			name: "session-info",
 			create: (_config, ctx) => createSessionTool(ctx),
+		},
+		{
+			name: "luthier-config",
+			create: (config, ctx) => createLuthierConfigTool(config, ctx),
 		},
 	];
 }
